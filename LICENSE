@@ -1,0 +1,44 @@
+# Licensing of OpenTeleEval
+
+This repository is released under **two different licenses**, applied **by directory**.
+There is no single license that covers the whole repository — a file's license is
+determined by the top-level directory it lives in.
+
+| Path | Contents | License | Full text |
+|:--|:--|:--|:--|
+| `code/**` | Evaluation framework, configs, prompts, scripts, and docs | **Apache License 2.0** | [CODE_LICENSE.md](./CODE_LICENSE.md) |
+| `datasets/**` | Benchmark data (questions, labels, trajectories, samples) | **CDLA-Permissive-2.0** | [DATASET_LICENSE.md](./DATASET_LICENSE.md) |
+| Repository root (`README.md`, `CONTRIBUTING.md`, `.flake8`, …) | Project documentation & config | **Apache License 2.0** | [CODE_LICENSE.md](./CODE_LICENSE.md) |
+
+> The authoritative SPDX identifiers: code is `Apache-2.0`; data is `CDLA-Permissive-2.0`.
+
+## Rules
+
+1. A file's license follows the **top-level directory** it lives in.
+2. Where a source file carries its own SPDX identifier or copyright header, **that header
+   takes precedence** over this table (this protects third-party code imported under
+   Apache-2.0 — see [NOTICE](./NOTICE)).
+3. **Data is never licensed under Apache-2.0**, regardless of where it is located. Raw
+   benchmark data belongs under `datasets/` only.
+4. Models, metrics, and analyses computed from the data ("Results" as defined in
+   CDLA-Permissive-2.0 §5.4) are **not** subject to the data license (§3.1).
+
+## How this is enforced across the repo
+
+- `code/LICENSE`  — copy of the Apache-2.0 text.
+- `datasets/LICENSE` — copy of the CDLA-Permissive-2.0 text (required to accompany the
+  data whenever it is shared, per CDLA-Permissive-2.0 §2.1).
+- `code/README.md` and `datasets/README.md` — per-directory license statements that
+  cross-reference each other.
+- `NOTICE` — third-party attribution (OpenCompass, HuggingFace).
+
+## Third-party components
+
+The evaluation framework under `code/` is derived from the
+[OpenCompass](https://github.com/open-compass/opencompass) project and includes metric
+implementations from HuggingFace, both under Apache-2.0. See [NOTICE](./NOTICE).
+
+Copyright 2025 The OpenTeleEval Authors.
+
+Licensed under the Apache License, Version 2.0 (the code) and the Community Data License
+Agreement – Permissive, Version 2.0 (the datasets), as described above.

@@ -1,0 +1,15 @@
+OpenTeleEval
+Copyright 2025 The OpenTeleEval Authors.
+
+This product includes software developed as part of the OpenCompass project
+(https://github.com/open-compass/opencompass), Copyright OpenCompass Contributors,
+licensed under the Apache License, Version 2.0. Portions of code/opencompass/ are
+derived from that project, with modifications by the OpenTeleEval Authors.
+
+This product includes metric implementations derived from HuggingFace Evaluate /
+Datasets (located in code/opencompass/openicl/icl_evaluator/hf_metrics/), Copyright
+The HuggingFace Authors, licensed under the Apache License, Version 2.0.
+
+The benchmark datasets in datasets/ are NOT covered by the Apache License. They are
+licensed under the Community Data License Agreement - Permissive, Version 2.0
+(CDLA-Permissive-2.0). See DATASET_LICENSE.md.
