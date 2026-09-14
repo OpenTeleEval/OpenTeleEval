@@ -35,13 +35,13 @@ _infer_cfg = dict(
 _eval_cfg = dict(
     evaluator=dict(type=AccEvaluator),
     pred_postprocessor=dict(type=eoa_tag_postprocessor),
-    data_postprocessor=dict(type=extract_specified_options))
+    dataset_postprocessor=dict(type=extract_specified_options))
 
-network_optimization_datasets = dict(
+network_optimization_datasets = [dict(
     abbr="NetworkOptimization",
     type=NetOptmDataset,
     path="../datasets/Knowledge_Comprehension/Product Knowledge/Wireless_Network/network_optimization.json",
     reader_cfg=_reader_cfg,
     infer_cfg=_infer_cfg,
     eval_cfg=_eval_cfg,
-)
+)]

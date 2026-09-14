@@ -136,7 +136,7 @@ class LocalRunner(BaseRunner):
             def submit(task, index):
                 task = TASKS.build(dict(cfg=task, type=self.task_cfg['type']))
                 num_gpus = task.num_gpus
-                if not gpus:
+                if gpus.size == 0:
                 # 如果没有可用的 GPU，强制使用 CPU
                     num_gpus = 0
                 assert len(gpus) >= num_gpus

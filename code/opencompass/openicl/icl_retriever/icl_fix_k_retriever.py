@@ -46,9 +46,17 @@ class FixKRetriever(BaseRetriever):
     def retrieve(self):
         """Retrieve the in-context example index for each test example."""
         num_idx = len(self.index_ds)
-        for idx in self.fix_id_list:
-            assert idx < num_idx, f'Index {idx} is out of range of {num_idx}'
+        # Filter out-of-range indices so that small dataset subsets do not
+        # crash the run (fewer in-context examples are used instead).
+        valid_id_list = [idx for idx in self.fix_id_list if idx < num_idx]
+        if len(valid_id_list) < len(self.fix_id_list):
+            logger.warning(
+                f'fix_id_list {self.fix_id_list} exceeds dataset size '
+                f'{num_idx}; using {valid_id_list} instead.')
+        assert valid_id_list, (
+            f'No valid in-context indices: fix_id_list={self.fix_id_list}, '
+            f'dataset size={num_idx}')
         rtr_idx_list = []
         for _ in trange(len(self.test_ds), disable=not self.is_main_process):
-            rtr_idx_list.append(self.fix_id_list)
+            rtr_idx_list.append(valid_id_list)
         return rtr_idx_list

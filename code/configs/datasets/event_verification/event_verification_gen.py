@@ -25,11 +25,11 @@ _eval_cfg = dict(
     pred_role="BOT",
 )
 
-event_verification_datasets = dict(
+event_verification_datasets = [dict(
     abbr="EventVerification",
     type=EventVerificationDataset,
     path="../datasets/Knowledge_Application/Event_Verification/event_verification.json",
     reader_cfg=_reader_cfg,
     infer_cfg=_infer_cfg,
     eval_cfg=_eval_cfg,
-)
+)]

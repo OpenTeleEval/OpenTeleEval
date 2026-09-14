@@ -11,6 +11,7 @@ from datasets import Dataset
 
 from opencompass.datasets import BaseDataset
 from opencompass.registry import LOAD_DATASET
+from opencompass.utils import str2json
 
 
 @LOAD_DATASET.register_module()
@@ -32,6 +33,9 @@ class EntityExtractionDataset(BaseDataset):
                 f'[EntityExtraction] No data found for type "{name}" '
                 f'in {path}, this subtype will be skipped.'
             )
+            # Keep the expected schema so downstream code does not crash
+            # on a column-less empty dataset.
+            return Dataset.from_dict({'question': [], 'answer': []})
 
         return Dataset.from_list(data)
 

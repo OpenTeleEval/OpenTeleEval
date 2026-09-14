@@ -24,7 +24,7 @@ _infer_cfg = dict(
 _eval_cfg = dict(
     evaluator=dict(type=AccEvaluator),
     pred_postprocessor=dict(type=extract_specified_options),
-    data_postprocessor=dict(type=extract_specified_options))
+    dataset_postprocessor=dict(type=extract_specified_options))
 
 NUM_RUNS = 3
 

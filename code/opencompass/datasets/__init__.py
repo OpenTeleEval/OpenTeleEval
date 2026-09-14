@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 The OpenTeleEval Authors.
 
+from .base import *  # noqa: F401, F403, isort:skip
 from .basic_knowledge import *  # noqa: F401, F403
 from .core_network import *  # noqa: F401, F403
 from .entity_extraction import *  # noqa: F401, F403

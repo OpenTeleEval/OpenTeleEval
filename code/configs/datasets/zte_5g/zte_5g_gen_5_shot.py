@@ -39,7 +39,26 @@ for _area in zte_5g_area_sets:
         _infer_cfg = dict(
             prompt_template=dict(
                 type=PromptTemplate,
-                template=zte_5g_templates[_question_type],
+                template=dict(
+                    begin="</E>",
+                    round=[
+                        dict(role="HUMAN",
+                             prompt=zte_5g_templates[_question_type]),
+                    ],
+                ),
+                ice_token="</E>",
+            ),
+            ice_template=dict(
+                type=PromptTemplate,
+                template=dict(
+                    begin="</E>",
+                    round=[
+                        dict(role="HUMAN",
+                             prompt=zte_5g_templates[_question_type]),
+                        dict(role="BOT", prompt="{answer}</E>"),
+                    ],
+                ),
+                ice_token="</E>",
             ),
             retriever=dict(type=FixKRetriever, fix_id_list=[0, 1, 2, 3, 4]),
             inferencer=dict(type=GenInferencer),

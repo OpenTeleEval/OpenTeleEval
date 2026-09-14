@@ -8,13 +8,15 @@ from opencompass.openicl.icl_prompt_template import PromptTemplate
 from opencompass.openicl.icl_retriever import ZeroRetriever
 from opencompass.utils.text_postprocessors import latex_last_en
 
-PROMPT = """以下是中国关于通信工程师考试的选择题，只有一个选项是正确的，请选出其中的正确的选项。
+PROMPT = r"""以下是中国关于通信工程师考试的选择题，只有一个选项是正确的，请选出其中的正确的选项。
 {question}
 A. {A}
 B. {B}
 C. {C}
 D. {D}
+请仅输出正确选项的字母，并将最终答案以 \boxed{} 格式给出，例如：答案：\boxed{A}
 答案："""
+
 
 _reader_cfg = dict(
     input_columns=['question', 'A', 'B', 'C', 'D'],

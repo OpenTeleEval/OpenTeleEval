@@ -40,6 +40,11 @@ class IntentRecognitionDataset(BaseDataset):
                     'output': item.get('output', ''),
                 })
 
+        if not data:
+            # Keep the expected schema so downstream code does not crash
+            # on a column-less empty dataset.
+            return Dataset.from_dict({'input': [], 'output': []})
+
         return Dataset.from_list(data)
 
 

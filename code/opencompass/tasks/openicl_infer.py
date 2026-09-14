@@ -2,6 +2,7 @@
 # Copyright 2025 The OpenTeleEval Authors.
 
 import argparse
+import sys
 import os.path as osp
 import random
 import time
@@ -53,7 +54,9 @@ class OpenICLInferTask(BaseTask):
                        f'--nproc_per_node {self.num_procs} '
                        f'{script_path} {cfg_path}')
         else:
-            python = 'python3' if which('python3') else 'python'
+            # Use the current interpreter so the subprocess runs in the same
+            # environment (e.g. conda env) instead of an arbitrary python3.
+            python = sys.executable or ('python3' if which('python3') else 'python')
             command = f'{python} {script_path} {cfg_path}'
 
         return template.format(task_cmd=command)

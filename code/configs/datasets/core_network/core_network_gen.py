@@ -63,11 +63,11 @@ _eval_cfg = dict(
     evaluator=dict(type=CoreNetworkEvaluator),
 )
 
-core_network_datasets = dict(
+core_network_datasets = [dict(
     abbr="CoreNetwork",
     type=CoreNetwork,
     path="../datasets/Knowledge_Comprehension/Product Knowledge/Core_Network/core_network.json",
     reader_cfg=_reader_cfg,
     infer_cfg=_infer_cfg,
     eval_cfg=_eval_cfg,
-)
+)]

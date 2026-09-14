@@ -5,11 +5,13 @@ tabulate
 tqdm
 setuptools
 requests
-httpx
+httpx[http2]
+importlib_metadata
 openai
 jieba
 datasets
 evaluate
+scikit-learn
 transformers
 nltk==3.8
 rouge_score

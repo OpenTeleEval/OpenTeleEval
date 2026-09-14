@@ -12,7 +12,7 @@ from opencompass.tasks import OpenICLInferTask, OpenICLEvalTask
 with read_base():
     from ..configs.datasets.basic_knowledge.basic_knowledge_gen import basic_knowledge_datasets
 
-datasets = [basic_knowledge_datasets]
+datasets = sum((v for k, v in locals().items() if k.endswith("_datasets")), [])
 
 rest_type = "ReasoningAPI"
 model = "model_name"
@@ -69,4 +69,4 @@ eval = dict(
                 task=dict(type=OpenICLEvalTask)),
 )
 
-work_dir = "eval_result/ops-rl-full-data-0528-mix-transformer-step30/CCN横向根因推理/"
+work_dir = f"eval_result/{model}/"

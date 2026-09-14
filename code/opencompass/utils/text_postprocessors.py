@@ -111,6 +111,24 @@ def latex_last_en(text: str) -> str:
     matches = extract_boxed_content(text)
     if matches:
         return general_en_postprocess(matches)
+    # Fallbacks for answers not wrapped in \boxed{}: the prompt only asks
+    # for a letter, so models often answer with Chinese/English markers or
+    # bold options instead. Without a fallback everything scores 0.
+    text = extract_non_reasoning_content(text)
+    # e.g. "答案是A", "答案：B", "answer is C", "answer: D"
+    m = re.findall(r'(?:答案\s*[是为：:]|answer\s*(?:is|:))\s*[*\'"]?([A-D])',
+                   text, re.IGNORECASE)
+    if m:
+        return m[-1].upper()
+    # e.g. "**C. xxx**" bold option at the start of the answer
+    m = re.findall(r'\*\*\s*([A-D])\s*[\.、\)]', text)
+    if m:
+        return m[0].upper()
+    # e.g. a standalone option letter on its own
+    m = re.findall(r'(?:^|[\s(（])([A-D])(?=[\s.。、)）:：]|$)', text,
+                   re.MULTILINE)
+    if m:
+        return m[-1].upper()
     return ""
 
 

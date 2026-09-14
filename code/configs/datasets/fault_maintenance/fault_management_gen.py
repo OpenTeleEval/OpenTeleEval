@@ -37,13 +37,13 @@ _infer_cfg = dict(
 _eval_cfg = dict(
     evaluator=dict(type=AccEvaluator),
     pred_postprocessor=dict(type=latex_last_mcq),
-    data_postprocessor=dict(type=extract_specified_options))
+    dataset_postprocessor=dict(type=extract_specified_options))
 
-fault_maintenance_datasets = dict(
+fault_maintenance_datasets = [dict(
     abbr="FaultMaintenance",
     type=FaultMaintenanceDataset,
     path="../datasets/Knowledge_Comprehension/Product Knowledge/Wireless_Network/fault_maintenance.json",
     reader_cfg=_reader_cfg,
     infer_cfg=_infer_cfg,
     eval_cfg=_eval_cfg,
-)
+)]

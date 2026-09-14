@@ -2,3 +2,4 @@
 # Copyright 2025 The OpenTeleEval Authors.
 
 from .judge_llama import JudgeLlama  # noqa: F401, F403
+from .openai_judge import OpenAIJudge, maybe_build_openai_judge  # noqa: F401, F403
