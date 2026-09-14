@@ -42,7 +42,9 @@ OpenTeleEval consists of 12 tasks categorized into two main levels.
 
 ### System Requirements
 
-Python version >= 3.8
+* Python >= 3.8 (Python 3.10 recommended and validated)
+* No GPU required for API-based evaluation (the default path); a GPU is only
+  needed if you evaluate locally-hosted HuggingFace models
 
 ### Dependency Installation
 
@@ -53,9 +55,10 @@ Project dependencies are managed via `setup.py`, with the dependency list locate
 git clone https://github.com/OpenTeleEval/OpenTeleEval.git
 cd OpenTeleEval
 
-# 2. (Recommended) Create a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
+# 2. (Recommended) Create a conda environment
+conda create -n openteleeval python=3.10 -y
+conda activate openteleeval
+# (a plain venv works too: python3 -m venv .venv && source .venv/bin/activate)
 
 # 3. Install the project (automatically installs dependencies from requirements.txt)
 pip install -e code/
@@ -72,9 +75,13 @@ python -c "from opencompass import __version__; print(__version__)"
 
 ## Quick Start
 
-### Step 1: Prepare Configuration File
+Evaluation is driven by a single Python config file. Ready-to-copy examples
+live in `code/examples/`:
 
-Copy the example configuration file and modify the model API endpoint and key:
+* `CoreNetwork.py` — subjective QA scored by **LLM-as-Judge**
+* `BasicKnowledge.py` — multiple-choice questions scored by rule-based matching
+
+### Step 1: Prepare Configuration File
 
 ```bash
 cd code
@@ -87,7 +94,7 @@ Edit `my_eval.py` and set the following key parameters:
 # Model name (used for identification and output directory naming)
 model = "your_model_name"
 
-# Model API endpoint
+# Model API endpoint (any OpenAI-compatible service, e.g. vLLM)
 api_url = "https://your-api-endpoint/v1/chat/completions"
 
 # API authentication (if required)
@@ -96,13 +103,18 @@ api_headers = {
     "Authorization": "Bearer your-api-key",
 }
 
-# Judge model (for LLM-as-Judge scoring)
+# Judge model (for LLM-as-Judge scoring; may be the same endpoint)
 judge_model_cfg = dict(
     base_url="https://your-judge-api-url",
     model="judge_model_name",
     api_key="your-judge-api-key",
 )
 ```
+
+> **Note:** only judge-based evaluators (e.g. `CoreNetworkEvaluator`) accept
+> `judge_model`. If you build a config mixing judge-based and rule-based
+> datasets, inject it conditionally — see `examples/CoreNetwork.py` and
+> `CLAUDE.md` for the exact pattern.
 
 ### Step 2: Run Evaluation
 
@@ -112,11 +124,36 @@ python run.py my_eval.py
 
 This command automatically completes the full pipeline: **inference → evaluation → result aggregation**.
 
+Useful variants:
+
+```bash
+python run.py my_eval.py --debug          # single-process, logs to stdout (use this first when debugging)
+python run.py my_eval.py --dry-run        # only partition and print tasks
+python run.py my_eval.py -m infer         # inference only
+python run.py my_eval.py -m eval -r latest  # re-score the newest run
+python run.py my_eval.py -r latest        # resume: reuse finished tasks, run missing ones
+```
+
 ### Step 3: View Results
 
-Evaluation results are saved by default to the `eval_result/<model_name>/` directory. You can customize the output location by setting `work_dir` in the configuration.
+Outputs are saved under `<work_dir>/<timestamp>/` (`work_dir` defaults to
+`eval_result/<model_name>/` and can be overridden in the config or via `-w`):
 
-> **Note:** The public repo includes only example data subsets. To reproduce paper results, obtain the full dataset from the maintainers (see [MAINTAINER.md](./MAINTAINER.md)).
+```
+predictions/<model>/<dataset>.json   # raw generations with gold answers
+results/<model>/<dataset>.json       # per-dataset metrics
+logs/infer|eval/                     # per-task logs — check here first on failure
+summary/summary_<ts>.txt / .csv      # aggregated score table
+```
+
+> **Notes:**
+> * The public repo includes only example data subsets; some dataset subtypes
+>   are empty and legitimately show `-` in the summary table. To reproduce
+>   paper results, obtain the full dataset from the maintainers (see
+>   [MAINTAINER.md](./MAINTAINER.md)).
+> * If you use an AI coding assistant (e.g. Claude Code) to work with this
+>   repo, point it at [CLAUDE.md](./CLAUDE.md) for framework internals,
+>   run-book commands and known pitfalls.
 
 ## Experiments and Analysis
 
