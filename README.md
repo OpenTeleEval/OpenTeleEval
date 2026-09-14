@@ -152,8 +152,8 @@ summary/summary_<ts>.txt / .csv      # aggregated score table
 >   paper results, obtain the full dataset from the maintainers (see
 >   [MAINTAINER.md](./MAINTAINER.md)).
 > * If you use an AI coding assistant (e.g. Claude Code) to work with this
->   repo, point it at [CLAUDE.md](./CLAUDE.md) for framework internals,
->   run-book commands and known pitfalls.
+>   repo, point it at [CLAUDE.md](./CLAUDE.md) for framework internals and
+>   run-book commands.
 
 ## Experiments and Analysis
 

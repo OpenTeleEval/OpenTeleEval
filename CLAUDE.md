@@ -139,48 +139,6 @@ summary/summary_<ts>.txt|.csv        # aggregated table
 Datasets with zero samples (empty public subsets) show `-` in the summary —
 that is expected, not a bug.
 
-## Codebase conventions and pitfalls
-
-These are hard-won; read before editing:
-
-1. **Dataset configs must be lists.** `xxx_datasets = [dict(...)]`. Several
-   configs were fixed from plain `dict(...)` — the `sum((...), [])` pattern in
-   examples depends on this.
-2. **`dataset_postprocessor` is the only honored key** for postprocessing
-   reference answers (`openicl_eval.py`). A `data_postprocessor` key is
-   silently ignored — this once made all 3GPP multi-select answers score 0.
-3. **mmengine lazy import placeholders.** Inside a config loaded via
-   `read_base()`, class objects under `type=` are placeholder objects; match
-   them with `"Name" in str(obj)`, never `obj.__name__`.
-4. **FixKRetriever needs `ice_template`** in the same `infer_cfg`, plus the
-   index split must have at least `max(fix_id_list)+1` samples (out-of-range
-   ids are now clamped with a warning, but an empty valid list still asserts).
-5. **`FixKRetriever` retrieves from the *train* split**; `DatasetReader` maps
-   a plain `Dataset` to both train and test, so few-shot examples may leak
-   from the test subset on tiny public subsets. Use full data for real scores.
-6. **Subprocesses run via `sys.executable`** (`openicl_infer.py`). Do not
-   reintroduce bare `python3` — it silently picks the wrong environment.
-7. **Judge wiring:** `CoreNetworkEvaluator` (and any `BaseJudgeACCEvaluator`
-   /`BaseJudgeScoreEvaluator` subclass) takes `judge_model=dict(base_url,
-   model, api_key)` in its evaluator cfg and builds an `OpenAIJudge`. If the
-   injection is missing, it falls back to `JudgeLlama`, whose default URL is a
-   hardcoded internal IP — failures look like long timeouts, not errors.
-8. **Answer extraction is prompt-sensitive.** `latex_last_en` expects
-   `\boxed{}` and only has limited fallbacks; if you change an MCQ prompt,
-   verify the postprocessor still extracts the option letter, or accuracy
-   collapses to 0 without any error.
-9. **`BaseGeneralApi` auth quirk:** the OpenAI client is built with
-   `api_key=f"Bearer {key}"`, which double-prefixes `Bearer` on endpoints
-   that actually check auth. Auth-free vLLM endpoints are unaffected; fix
-   before pointing at a key-protected API.
-10. **Multimodal code is absent by design.** `MultimodalNaivePartitioner` /
-    `mm_infer` imports are guarded no-ops; don't "fix" them by re-adding
-    hard imports.
-11. HuggingFace local-model inference, Slurm/DLC runners, and
-    `BaseJudgeScoreEvaluator` (5-point judge) are implemented but **not
-    covered by the end-to-end validation** described below — smoke-test
-    before relying on them.
-
 ## Validated reference setup
 
 The whole pipeline was validated end to end (all 50 public-subset dataset
